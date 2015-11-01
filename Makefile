@@ -14,5 +14,5 @@ example: $(SRC) flag_example.c
 	@$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm -f test example
+	@rm -f test example *.dSYM
 .PHONY: clean
