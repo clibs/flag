@@ -64,7 +64,10 @@ largest_flag_name(flagset_t *self) {
 
 flagset_t *
 flagset_new() {
-  return calloc(1, sizeof(flagset_t));
+  flagset_t *self = calloc(1, sizeof(flagset_t));
+  if (!self) return NULL;
+  self->usage = "[options] [arguments]";
+  return self;
 }
 
 void
@@ -146,7 +149,7 @@ flagset_parse(flagset_t *self, int argc, const char **args) {
 
 void
 flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
-  fprintf(fp, "\n  Usage: %s [options] [arguments]\n", name);
+  fprintf(fp, "\n  Usage: %s %s\n", name, self->usage);
   fprintf(fp, "\n  Options:\n");
 
   int max = largest_flag_name(self);

@@ -66,10 +66,11 @@ typedef struct {
 typedef struct {
   bool showVersion;
   bool showHelp;
+  const char *usage;
+  int nflags;
   flag_t flags[FLAGS_MAX];
   int argc;
   const char *argv[FLAGS_MAX_ARGS];
-  int nflags;
   union {
     flag_t *flag;
     const char *arg;
