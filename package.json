@@ -1,0 +1,9 @@
+{
+  "name": "flag",
+  "version": "0.0.1",
+  "repo": "clibs/flag",
+  "description": "Go-style flag parsing for C programs",
+  "keywords": ["cli", "command", "parser", "argv", "args", "options", "flag", "flags"],
+  "license": "MIT",
+  "src": ["flag.h", "flag.c"]
+}
