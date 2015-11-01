@@ -83,28 +83,6 @@ main(){
       flagset_free(set);
     }
 
-    it("should return error on --help") {
-      const char *args[] = { "--help" };
-
-      flagset_t *set = flagset_new();
-      flag_error err = flagset_parse(set, 1, args);
-
-      assert(err == FLAG_SHOW_HELP);
-
-      flagset_free(set);
-    }
-
-    it("should return error on --version") {
-      const char *args[] = { "--version" };
-
-      flagset_t *set = flagset_new();
-      flag_error err = flagset_parse(set, 1, args);
-
-      assert(err == FLAG_SHOW_VERSION);
-
-      flagset_free(set);
-    }
-
     it("should error on undefined flags") {
       const char *args[] = { "--whatever" };
 

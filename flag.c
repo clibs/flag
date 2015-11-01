@@ -146,9 +146,6 @@ flagset_find(flagset_t *self, const char *arg) {
 
 flag_error
 flagset_parse(flagset_t *self, int argc, const char **args) {
-  flagset_bool(self, &self->showVersion, "version", "Output version");
-  flagset_bool(self, &self->showHelp, "help", "Output help");
-
   for (int i = 0; i < argc; ++i) {
     const char *arg = args[i];
 
@@ -187,14 +184,6 @@ flagset_parse(flagset_t *self, int argc, const char **args) {
         *(bool *) flag->value = is_negated(arg) ? false : true;
         break;
     }
-  }
-
-  if (self->showHelp) {
-    return FLAG_SHOW_HELP;
-  }
-
-  if (self->showVersion) {
-    return FLAG_SHOW_VERSION;
   }
 
   return FLAG_OK;
@@ -237,17 +226,25 @@ flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
 void
 flag_parse(int argc, const char **args, const char *version) {
   const char *name = args[0];
+  bool showVersion = false;
+  bool showHelp = false;
+
+  flagset_bool(set, &showVersion, "version", "Output version");
+  flagset_bool(set, &showHelp, "help", "Output help");
+
   flag_error err = flagset_parse(set, argc-1, args+1);
 
+  if (showHelp) {
+    flagset_write_usage(set, stdout, name);
+    exit(1);
+  }
+
+  if (showVersion) {
+    printf("%s\n", version);
+    exit(0);
+  }
+
   switch (err) {
-    case FLAG_SHOW_VERSION:
-      printf("%s\n", version);
-      exit(0);
-      break;
-    case FLAG_SHOW_HELP:
-      flagset_write_usage(set, stdout, name);
-      exit(1);
-      break;
     case FLAG_ERROR_PARSING:
       fprintf(stderr, "invalid value for --%s\n", set->error.flag->name);
       exit(1);

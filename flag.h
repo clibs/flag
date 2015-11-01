@@ -22,8 +22,6 @@
 
 typedef enum {
   FLAG_OK,
-  FLAG_SHOW_HELP,
-  FLAG_SHOW_VERSION,
   FLAG_ERROR_PARSING,
   FLAG_ERROR_ARG_MISSING,
   FLAG_ERROR_UNDEFINED_FLAG
@@ -64,8 +62,6 @@ typedef struct {
  */
 
 typedef struct {
-  bool showVersion;
-  bool showHelp;
   const char *usage;
   int nflags;
   flag_t flags[FLAGS_MAX];
