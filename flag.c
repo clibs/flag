@@ -140,7 +140,18 @@ flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
 
   for (int i = 0; i < self->nflags; ++i) {
     flag_t *flag = &self->flags[i];
-    fprintf(fp, "    --%s – %s\n", flag->name, flag->help);
+    fprintf(fp, "    --%s – %s", flag->name, flag->help);
+    switch (flag->type) {
+      case FLAG_TYPE_STRING:
+        fprintf(fp, " (%s)", *(char **) flag->value);
+        break;
+      case FLAG_TYPE_INT:
+        fprintf(fp, " (%d)", *(int *) flag->value);
+        break;
+      case FLAG_TYPE_BOOL:
+        break;
+    }
+    fprintf(fp, "\n");
   }
 
   fprintf(fp, "\n");
