@@ -51,6 +51,17 @@ is_negated(const char *s) {
   return strncmp(s, "--no-", 5) == 0;
 }
 
+static int
+largest_flag_name(flagset_t *self) {
+  int max = 0;
+  for (int i = 0; i < self->nflags; ++i) {
+    flag_t *flag = &self->flags[i];
+    size_t len = strlen(flag->name);
+    max = len > max ? len : max;
+  }
+  return max;
+}
+
 flagset_t *
 flagset_new() {
   return calloc(1, sizeof(flagset_t));
@@ -138,9 +149,11 @@ flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
   fprintf(fp, "\n  Usage: %s [options] [arguments]\n", name);
   fprintf(fp, "\n  Options:\n");
 
+  int max = largest_flag_name(self);
+
   for (int i = 0; i < self->nflags; ++i) {
     flag_t *flag = &self->flags[i];
-    fprintf(fp, "    --%s – %s", flag->name, flag->help);
+    fprintf(fp, "    --%-*s %s", max+1, flag->name, flag->help);
     switch (flag->type) {
       case FLAG_TYPE_STRING:
         fprintf(fp, " (%s)", *(char **) flag->value);
