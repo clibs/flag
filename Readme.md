@@ -41,6 +41,19 @@ main(int argc, const char **argv) {
 }
 ```
 
+Default help output:
+
+```
+Usage: ./example [options] [arguments]
+
+Options:
+  --requests     Number of total requests (5000)
+  --concurrency  Number of concurrent requests (10)
+  --url          Target url (:3000)
+  --version      Output version
+  --help         Output help
+```
+
 ## License
 
 MIT
