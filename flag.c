@@ -236,7 +236,7 @@ flag_parse(int argc, const char **args, const char *version) {
 
   if (showHelp) {
     flagset_write_usage(set, stdout, name);
-    exit(1);
+    exit(0);
   }
 
   if (showVersion) {
