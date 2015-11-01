@@ -234,16 +234,6 @@ flag_parse(int argc, const char **args, const char *version) {
 
   flag_error err = flagset_parse(set, argc-1, args+1);
 
-  if (showHelp) {
-    flagset_write_usage(set, stdout, name);
-    exit(0);
-  }
-
-  if (showVersion) {
-    printf("%s\n", version);
-    exit(0);
-  }
-
   switch (err) {
     case FLAG_ERROR_PARSING:
       fprintf(stderr, "invalid value for --%s\n", set->error.flag->name);
@@ -259,6 +249,16 @@ flag_parse(int argc, const char **args, const char *version) {
       break;
     case FLAG_OK:
       break;
+  }
+
+  if (showHelp) {
+    flagset_write_usage(set, stdout, name);
+    exit(0);
+  }
+
+  if (showVersion) {
+    printf("%s\n", version);
+    exit(0);
   }
 }
 
