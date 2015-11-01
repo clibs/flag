@@ -6,11 +6,27 @@
 #include <string.h>
 #include "flag.h"
 
+/*
+ * Singleton like a boss.
+ */
+
 static flagset_t *set = NULL;
+
+/*
+ * Parsing error.
+ */
 
 #define ERROR_PARSING (self->error.flag = flag, FLAG_ERROR_PARSING)
 
+/*
+ * Undefined flag error.
+ */
+
 #define ERROR_UNDEFINED (self->error.arg = arg, FLAG_ERROR_UNDEFINED_FLAG)
+
+/*
+ * Require that nflags is within the bounds.
+ */
 
 #define CHECK_BOUNDS \
   if (self->nflags >= FLAGS_MAX) { \
@@ -18,11 +34,20 @@ static flagset_t *set = NULL;
     exit(1); \
   }
 
+/*
+ * Require a non-flag argument or return error.
+ */
+
 #define REQUIRE_ARG \
   if (i == argc-1 || is_flag(args[i+1])) { \
     self->error.flag = flag; \
     return FLAG_ERROR_ARG_MISSING; \
   }
+
+/*
+ * Define flagset_<name> function for the given type,
+ * as well as the singleton flag_<name> variant.
+ */
 
 #define FLAG_TYPE(NAME, TYPE, CAP) \
   void \
@@ -41,15 +66,27 @@ static flagset_t *set = NULL;
     flagset_##NAME(set, value, name, help); \
   }
 
+/*
+ * Check for flag (--).
+ */
+
 static inline bool
 is_flag(const char *s) {
   return strlen(s) > 2 && s[0] == '-' && s[1] == '-';
 }
 
+/*
+ * Check for --no- prefix.
+ */
+
 static inline bool
 is_negated(const char *s) {
   return strncmp(s, "--no-", 5) == 0;
 }
+
+/*
+ * Largest flag name in the set.
+ */
 
 static int
 largest_flag_name(flagset_t *self) {
@@ -62,6 +99,10 @@ largest_flag_name(flagset_t *self) {
   return max;
 }
 
+/*
+ * New flagset.
+ */
+
 flagset_t *
 flagset_new() {
   flagset_t *self = calloc(1, sizeof(flagset_t));
@@ -70,10 +111,18 @@ flagset_new() {
   return self;
 }
 
+/*
+ * Free the flagset.
+ */
+
 void
 flagset_free(flagset_t *self) {
   free(self);
 }
+
+/*
+ * Find flag matching `arg` --no-`arg`.
+ */
 
 static flag_t *
 flagset_find(flagset_t *self, const char *arg) {
@@ -90,6 +139,10 @@ flagset_find(flagset_t *self, const char *arg) {
   }
   return NULL;
 }
+
+/*
+ * Parse and return error for delegation.
+ */
 
 flag_error
 flagset_parse(flagset_t *self, int argc, const char **args) {
@@ -147,6 +200,10 @@ flagset_parse(flagset_t *self, int argc, const char **args) {
   return FLAG_OK;
 }
 
+/*
+ * Write usage information to `fp`.
+ */
+
 void
 flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
   fprintf(fp, "\n  Usage: %s %s\n", name, self->usage);
@@ -172,6 +229,10 @@ flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
 
   fprintf(fp, "\n");
 }
+
+/*
+ * Parse and output on error.
+ */
 
 void
 flag_parse(int argc, const char **args, const char *version) {
@@ -203,6 +264,10 @@ flag_parse(int argc, const char **args, const char *version) {
       break;
   }
 }
+
+/*
+ * Supported flag types.
+ */
 
 FLAG_TYPE(int, int, INT);
 FLAG_TYPE(bool, bool, BOOL);
