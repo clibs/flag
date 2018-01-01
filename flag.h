@@ -3,6 +3,7 @@
 #define _FLAG_H_
 
 #include <stdbool.h>
+#include <stdio.h>
 
 /*
  * Max flags that may be defined.
