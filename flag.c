@@ -225,6 +225,7 @@ flagset_write_usage(flagset_t *self, FILE *fp, const char *name) {
 
 void
 flag_parse(int argc, const char **args, const char *version) {
+  int rc = 0;
   const char *name = args[0];
   bool showVersion = false;
   bool showHelp = false;
@@ -237,28 +238,43 @@ flag_parse(int argc, const char **args, const char *version) {
   switch (err) {
     case FLAG_ERROR_PARSING:
       fprintf(stderr, "invalid value for --%s\n", set->error.flag->name);
-      exit(1);
+      rc = 1;
+      goto exit;
       break;
     case FLAG_ERROR_ARG_MISSING:
       fprintf(stderr, "missing value for --%s\n", set->error.flag->name);
-      exit(1);
+      rc = 1;
+      goto exit;
       break;
     case FLAG_ERROR_UNDEFINED_FLAG:
       fprintf(stderr, "undefined flag %s\n", set->error.arg);
-      exit(1);
+      rc = 1;
+      goto exit;
       break;
     case FLAG_OK:
+      goto ret;
       break;
   }
 
   if (showHelp) {
     flagset_write_usage(set, stdout, name);
-    exit(0);
+    goto exit;
   }
 
   if (showVersion) {
     printf("%s\n", version);
-    exit(0);
+    goto exit;
+  }
+exit:
+  if(set) {
+    free(set);
+    set = NULL;
+  }
+  exit(rc);
+ret:
+  if(set) {
+    free(set);
+    set = NULL;
   }
 }
 
