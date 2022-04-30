@@ -4,6 +4,7 @@
   "repo": "clibs/flag",
   "description": "Go-style flag parsing for C programs",
   "keywords": ["cli", "command", "parser", "argv", "args", "options", "flag", "flags"],
+  "makefile": "Makefile",
   "license": "MIT",
   "src": ["flag.h", "flag.c"]
 }
