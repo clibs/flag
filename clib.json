@@ -1,6 +1,6 @@
 {
   "name": "flag",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repo": "clibs/flag",
   "description": "Go-style flag parsing for C programs",
   "keywords": ["cli", "command", "parser", "argv", "args", "options", "flag", "flags"],
