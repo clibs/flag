@@ -252,7 +252,6 @@ flag_parse(int argc, const char **args, const char *version) {
       goto exit;
       break;
     case FLAG_OK:
-      goto ret;
       break;
   }
 
@@ -265,6 +264,8 @@ flag_parse(int argc, const char **args, const char *version) {
     printf("%s\n", version);
     goto exit;
   }
+  
+  goto ret;
 exit:
   if(set) {
     free(set);
