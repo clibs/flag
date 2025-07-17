@@ -1,0 +1,40 @@
+name: CI
+
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+      - run: make example
+      - run: ./example --requests 123 --concurrency 456 --url http://google.biz
+      - run: ./example --version
+      - run: ./example --help
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        cc: [gcc, clang]
+        exclude:
+          # macOS doesn't have gcc by default, it's aliased to clang
+          - os: macos-latest
+            cc: gcc
+    steps:
+      - uses: actions/checkout@v4
+      - if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+      - if: matrix.os == 'macos-latest'
+        # Xcode command line tools should already be available
+        run: |
+          xcode-select --install 2>/dev/null || true
+      - env:
+          CC: ${{ matrix.cc }}
+        run: make check
